@@ -8,11 +8,6 @@
 
 import UIKit
 
-
-var _currentUser: User?
-let currentUserKey = "kCurrentUserKey"
-
-
 class User: NSObject {
     var name: NSString?
     var screename: NSString?
@@ -39,12 +34,12 @@ class User: NSObject {
     }
     
     
-    
+    static var _currentUser: User?
     
     class var currentUser: User? {
         get {
             if _currentUser == nil {
-                var data = NSUserDefaults.standardUserDefaults().objectForKey(currentUserKey) as? NSData
+                var data = NSUserDefaults.standardUserDefaults().objectForKey("currentUserData") as? NSData
                 if data != nil {
                     do {
                         var dictionary = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as! NSDictionary
@@ -64,17 +59,17 @@ class User: NSObject {
             if _currentUser != nil {
                 do {
                     let data = try NSJSONSerialization.dataWithJSONObject(user!.dictionary!, options: []) as NSData
-                    NSUserDefaults.standardUserDefaults().setObject(data, forKey: currentUserKey)
+                    NSUserDefaults.standardUserDefaults().setObject(data, forKey: "currentUserData")
                 } catch {
                     print("JSON error")
-                    NSUserDefaults.standardUserDefaults().setObject(nil, forKey: currentUserKey)
+                    NSUserDefaults.standardUserDefaults().setObject(nil, forKey: "currentUserData")
                 }
             } else {
-                NSUserDefaults.standardUserDefaults().setObject(nil, forKey: currentUserKey)
+                NSUserDefaults.standardUserDefaults().setObject(nil, forKey: "currentUserData")
             }
             NSUserDefaults.standardUserDefaults().synchronize()
         }
     }
-
 }
+
 
